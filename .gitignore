@@ -1,0 +1,6 @@
+.DS_Store
+.DocumentRevisions-V100
+.Spotlight-V100
+.Trashes
+/site/node_modules
+/server/db/db.go
