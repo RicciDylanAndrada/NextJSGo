@@ -24,6 +24,8 @@ func main(){
 // hub initialization
 	hub:=ws.NewHub()
 	wsHandler:=ws.NewHandler(hub)
+
+	go hub.Run()
 	
 
 
