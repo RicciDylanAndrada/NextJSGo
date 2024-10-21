@@ -2,15 +2,11 @@ package user
 
 import (
 	"context"
-	"fmt"
-	"log"
-	"os"
 	"server/util"
 	"strconv"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/joho/godotenv"
 )
 
 const(
@@ -71,7 +67,7 @@ type MyJwtClaims struct{
 
 
 
-func (s *service) Login (c context.Context,req *LoginUserReq)(*LoginUserRes,error){
+func (s *service) Login(c context.Context,req *LoginUserReq)(*LoginUserRes,error){
 	signedKey := goDotEnvVariable("SIGNED_KEY")
 	ctx,cancel := context.WithTimeout(c,s.timeout)
 	defer cancel()
@@ -84,16 +80,22 @@ func (s *service) Login (c context.Context,req *LoginUserReq)(*LoginUserRes,erro
 	if err!=nil{
 	return &LoginUserRes{},err
 	}
+	var idString=strconv.Itoa(int(u.ID))
 
 	token:=jwt.NewWithClaims(jwt.SigningMethodHS256,MyJwtClaims{
-		ID:strconv.Itoa(int(u.ID)),
+		ID:idString,
 		Username: u.Username,
 		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:strconv.Itoa(int(u.ID)),
+			Issuer:idString,
 			ExpiresAt:jwt.NewNumericDate((time.Now().Add(24*time.Hour))),
 
 		},
 
 	})
-	token.SignedString([]byte(signedKey))
+	ss,err:=token.SignedString([]byte(signedKey))
+	if err!=nil{
+		return &LoginUserRes{},err
+	}
+	return &LoginUserRes{accessToken: ss,Username: u.Username,ID:idString},nil
+
 }

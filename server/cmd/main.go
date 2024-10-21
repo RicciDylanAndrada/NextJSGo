@@ -6,6 +6,7 @@ import (
 	router "server"
 	"server/db"
 	"server/internal/user"
+	"server/internal/user/ws"
 )
 
 func main(){
@@ -19,6 +20,13 @@ func main(){
 	userRep:=user.NewRepo(dbConn.GetDB())
 	userSvc:=user.NewService((userRep))
 	userHandler:=user.NewHandler(userSvc)
-	router.InitRouter(userHandler)
+
+// hub initialization
+	hub:=ws.NewHub()
+	wsHandler:=ws.NewHandler(hub)
+	
+
+
+	router.InitRouter(userHandler,wsHandler)
 	router.Start("0.0.0.0:8080")
 }

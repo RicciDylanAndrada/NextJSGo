@@ -58,5 +58,6 @@ type Repository interface {
 
 type Service interface{
 	CreateUser(c context.Context, req *CreateUserReq) (*CreateUserRes,error)
+	Login(c context.Context,req *LoginUserReq)(*LoginUserRes,error)
 }
 

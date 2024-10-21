@@ -1,0 +1,43 @@
+package ws
+
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+)
+
+type Handler struct{
+
+	hub *Hub
+}
+
+// constructor for hub
+func NewHandler( h *Hub) *Handler{
+	return &Handler{
+		hub:h,
+	}
+}
+
+
+
+type CreateRoomReq struct{
+	ID string `json:"id"`
+	Name string `json:"name"`
+
+}
+
+// reciever method for createRoom
+func (h *Handler) CreateRoom(c *gin.Context){
+var req CreateRoomReq
+if err:=c.ShouldBindJSON(&req);err!=nil{
+	c.JSON(http.StatusBadRequest,gin.H{"error:":err.Error()})
+	return 
+}
+h.hub.Rooms[req.ID]=&Room{
+	ID:req.ID,
+	Name:req.Name,
+	Clients: make(map[string]*Client),
+}
+// store room in mem
+c.JSON(http.StatusOK,req)
+}
