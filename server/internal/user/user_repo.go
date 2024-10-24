@@ -23,6 +23,7 @@ func NewRepo(db DBTX) Repository{
 
 }
 
+// reciever method
 func (r *repository) CreateUser(ctx context.Context,user *User) (*User,error){
 	var lastInsertID int
 	query:="INSERT INTO users(username, password, email) VALUES ($1, $2, $3) returning id"

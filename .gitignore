@@ -4,3 +4,5 @@
 .Trashes
 /site/node_modules
 /server/db/db.go
+/server/.env
+.env
