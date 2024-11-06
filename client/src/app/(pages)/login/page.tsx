@@ -1,18 +1,25 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import api from "../../api/login";
 import { FormField } from "@/app/types/formField";
-import { useRouter
+import { useRouter } from "next/navigation";
 
- } from "next/router";
- import { UserInfo } from "../../../../modules/auth_provider";
- 
+import { AuthContext, UserInfo } from "../../../../modules/auth_provider";
+
 export default function Page() {
-  const router=useRouter()
+  const { authenticated } = useContext(AuthContext);
+  const router = useRouter();
   const [formField, setFormFields] = useState<FormField>({
     email: "",
     password: "",
   });
+
+  useEffect(() => {
+    if (authenticated) {
+      router.push("/");
+      return;
+    }
+  }, [authenticated, router]);
 
   const handleOnFormChange = (key: string, value: string) => {
     setFormFields(
@@ -35,7 +42,7 @@ export default function Page() {
           "user_info",
           JSON.stringify({ username, password })
         );
-        return router.push('/')
+        return router.push("/");
       }
     } catch (e) {
       alert(e);
